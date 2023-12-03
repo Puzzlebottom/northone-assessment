@@ -4,7 +4,9 @@ import dummyTodos from "../data/dummyTodos"
 function App() {
 
   return (
-    <TodoList todos={dummyTodos} />
+    <main>
+      <TodoList todos={dummyTodos} />
+    </main>
   )
 }
 

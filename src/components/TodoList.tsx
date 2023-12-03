@@ -1,3 +1,4 @@
+import { Accordion } from "react-bootstrap";
 import { Todo } from "../interfaces/Todo"
 import TodoItem from "./TodoItem";
 
@@ -7,11 +8,11 @@ interface Props {
 
 function TodoList({ todos }: Props): React.JSX.Element {
   return (
-    <div>
+    <Accordion>
       {todos.map((todo) => (
-        <TodoItem todo={todo} />
+        <TodoItem key={todo.id} todo={todo} />
       ))}
-    </div>
+    </Accordion>
   )
 }
 
