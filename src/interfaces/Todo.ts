@@ -7,7 +7,11 @@ const todoSchema = z.object({
   name: z.string(),
   description: z.string(),
   status: z.enum(TODO_STATUS),
-  dueDate: z.date()
+  dueDate: z.string().pipe(z.coerce.date()),
 })
 
 export type Todo = z.infer<typeof todoSchema>;
+
+export const todoFormSchema = todoSchema.omit({ id: true })
+
+export type TodoFormData = z.infer<typeof todoFormSchema>
