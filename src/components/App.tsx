@@ -1,7 +1,7 @@
-import TodoList from "./TodoList"
 import { Button } from "react-bootstrap"
 import { FaPlus, FaSearch } from "react-icons/fa"
 import { useState } from "react"
+import TodoList from "./TodoList"
 import TodoForm from "./TodoForm"
 import useTodos from "../hooks/useTodos"
 import { Todo } from "../interfaces/Todo"
@@ -13,21 +13,21 @@ function App() {
   const [searchValue, setSearchValue] = useState('')
   const { todos, selected, addTodo, updateTodo, deleteTodo, selectTodo } = useTodos()
 
-  const handleAdd = () => {
+  const handleAdd = (): void => {
     selectTodo(null)
     setShowForm(true)
   }
 
-  const handleEdit = (todo: Todo) => {
+  const handleEdit = (todo: Todo): void => {
     selectTodo(todo.id)
     setShowForm(true)
   }
 
-  const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSort = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setSortBy(e.currentTarget.value)
   }
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(e.currentTarget.value)
   }
 

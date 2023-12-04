@@ -12,7 +12,7 @@ const dummyTodos: Todo[] = [
     id: '7d562888-9226-11ee-b9d1-0242ac120002',
     name: 'Banana',
     description: 'Another thing to do',
-    dueDate: new Date(),
+    dueDate: new Date('10-4-2023'),
     status: 'DONE'
   },
   {
