@@ -40,7 +40,7 @@ function TodoItem({ todo, deleteTodo, updateTodo, editTodo }: Props): React.JSX.
             {status === "PENDING" && <FaRegSquare />}
             {status === "DONE" && <FaRegCheckSquare />}
           </Button>
-          <time className="mx-2">{new Date(dueDate).toLocaleDateString()}</time>
+          <time className="mx-2">{new Date(dueDate).toISOString().slice(0, 10)}</time>
         </span>
         <h3 className="m-0">{name}</h3>
         <span className="col d-flex justify-content-end">
