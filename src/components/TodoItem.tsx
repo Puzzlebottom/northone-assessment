@@ -1,38 +1,51 @@
 import { Accordion, Button } from "react-bootstrap";
-import { FaPencilAlt, FaRegCheckSquare, FaRegSquare, FaTrashAlt } from "react-icons/fa";
-import { Todo } from "../interfaces/Todo"
+import {
+  FaPencilAlt,
+  FaRegCheckSquare,
+  FaRegSquare,
+  FaTrashAlt,
+} from "react-icons/fa";
+import { Todo } from "../interfaces/Todo";
 
 interface Props {
   todo: Todo;
-  deleteTodo: (todoId: string) => void
-  updateTodo: (todo: Todo) => void
-  editTodo: () => void
+  deleteTodo: (todoId: string) => void;
+  updateTodo: (todo: Todo) => void;
+  editTodo: () => void;
 }
 
-function TodoItem({ todo, deleteTodo, updateTodo, editTodo }: Props): React.JSX.Element {
-  const { id, name, description, status, dueDate } = todo
+function TodoItem({
+  todo,
+  deleteTodo,
+  updateTodo,
+  editTodo,
+}: Props): React.JSX.Element {
+  const { id, name, description, status, dueDate } = todo;
 
   const toggleStatus = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.stopPropagation()
-    updateTodo({ ...todo, status: todo.status === 'PENDING' ? 'DONE' : 'PENDING' })
-  }
+    e.stopPropagation();
+    updateTodo({
+      ...todo,
+      status: todo.status === "PENDING" ? "DONE" : "PENDING",
+    });
+  };
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
-    deleteTodo(id)
-  }
+    deleteTodo(id);
+  };
 
   const handleEdit = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
-    editTodo()
-  }
+    editTodo();
+  };
 
   return (
     <Accordion.Item eventKey={`${id}`}>
       <Accordion.Header>
         <span className="col">
           <Button
-            as='div'
+            as="div"
             variant={status === "DONE" ? "success" : "secondary"}
             className="mx-2 pb-2"
             onClick={toggleStatus}
@@ -40,7 +53,9 @@ function TodoItem({ todo, deleteTodo, updateTodo, editTodo }: Props): React.JSX.
             {status === "PENDING" && <FaRegSquare />}
             {status === "DONE" && <FaRegCheckSquare />}
           </Button>
-          <time className="mx-2">{new Date(dueDate).toISOString().slice(0, 10)}</time>
+          <time className="mx-2">
+            {new Date(dueDate).toISOString().slice(0, 10)}
+          </time>
         </span>
         <h3 className="m-0">{name}</h3>
         <span className="col d-flex justify-content-end">
@@ -56,7 +71,8 @@ function TodoItem({ todo, deleteTodo, updateTodo, editTodo }: Props): React.JSX.
             as="div"
             variant="danger"
             className="mx-2 pb-2"
-            onClick={handleDelete}>
+            onClick={handleDelete}
+          >
             <FaTrashAlt />
           </Button>
         </span>
@@ -64,8 +80,8 @@ function TodoItem({ todo, deleteTodo, updateTodo, editTodo }: Props): React.JSX.
       <Accordion.Body>
         <p className="m-3">{description}</p>
       </Accordion.Body>
-    </Accordion.Item >
-  )
+    </Accordion.Item>
+  );
 }
 
-export default TodoItem
+export default TodoItem;
