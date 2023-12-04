@@ -25,7 +25,7 @@ function TodoItem({ todo }: Props): React.JSX.Element {
           <time className="mx-2">{dueDate.toISOString()}</time>
         </span>
         <h3 className="m-0">{name}</h3>
-        <span>
+        <span className="col d-flex justify-content-end">
           <Button
             as="div"
             variant="primary"

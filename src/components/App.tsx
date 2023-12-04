@@ -1,13 +1,14 @@
 import TodoList from "./TodoList"
-import dummyTodos from "../data/dummyTodos"
 import { Button } from "react-bootstrap"
 import { FaPlus } from "react-icons/fa"
 import { useState } from "react"
 import TodoForm from "./TodoForm"
+import useTodos from "../hooks/useTodos"
 
 function App() {
 
   const [showForm, setShowForm] = useState<boolean>(false)
+  const { todos, selected, addTodo } = useTodos()
 
   return (
     <main className="container">
@@ -22,10 +23,10 @@ function App() {
             </Button>
           </div>
         </div>
-        <TodoList todos={dummyTodos} />
+        <TodoList todos={todos} />
       </section>
 
-      <TodoForm show={showForm} handleClose={() => setShowForm(false)} />
+      <TodoForm show={showForm} handleClose={() => setShowForm(false)} addTodo={addTodo} />
     </main>
   )
 }

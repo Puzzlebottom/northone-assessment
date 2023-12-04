@@ -7,9 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface Props {
   show: boolean;
   handleClose: () => void;
+  addTodo: (todo: Todo) => void;
 }
 
-function TodoForm({ show, handleClose }: Props): React.JSX.Element {
+function TodoForm({ show, handleClose, addTodo }: Props): React.JSX.Element {
   const formatDate = (date: Date | number): Date => {
     return new Date(date).toISOString().slice(0, 10) as unknown as Date
   }
@@ -27,7 +28,8 @@ function TodoForm({ show, handleClose }: Props): React.JSX.Element {
   })
 
   const submit = (data: FieldValues) => {
-    console.log(data)
+    const todo = { ...data, id: uuid() } as Todo
+    addTodo(todo)
     reset();
     handleClose();
   }
@@ -62,7 +64,7 @@ function TodoForm({ show, handleClose }: Props): React.JSX.Element {
             </Form.Label>
             <Form.Control {...register('dueDate')} type="date" />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="Status">
+          <Form.Group className="mb-3" controlId="status">
             <Form.Label>Status</Form.Label>
             <Form.Select {...register('status')} >
               <option value="PENDING">Pending</option>
