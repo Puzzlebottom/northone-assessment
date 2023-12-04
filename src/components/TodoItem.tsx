@@ -5,10 +5,16 @@ import { Todo } from "../interfaces/Todo"
 interface Props {
   todo: Todo;
   deleteTodo: (todoId: string) => void
+  updateTodo: (todo: Todo) => void
 }
 
-function TodoItem({ todo, deleteTodo }: Props): React.JSX.Element {
+function TodoItem({ todo, deleteTodo, updateTodo }: Props): React.JSX.Element {
   const { id, name, description, status, dueDate } = todo
+
+  const toggleStatus = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation()
+    updateTodo({ ...todo, status: todo.status === 'PENDING' ? 'DONE' : 'PENDING' })
+  }
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
@@ -23,7 +29,7 @@ function TodoItem({ todo, deleteTodo }: Props): React.JSX.Element {
             as='div'
             variant={status === "DONE" ? "success" : "secondary"}
             className="mx-2 pb-2"
-            onClick={() => console.log('status')}
+            onClick={toggleStatus}
           >
             {status === "PENDING" && <FaRegSquare />}
             {status === "DONE" && <FaRegCheckSquare />}

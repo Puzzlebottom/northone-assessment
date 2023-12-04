@@ -8,7 +8,7 @@ import useTodos from "../hooks/useTodos"
 function App() {
 
   const [showForm, setShowForm] = useState<boolean>(false)
-  const { todos, selected, addTodo, deleteTodo } = useTodos()
+  const { todos, selected, addTodo, updateTodo, deleteTodo, selectTodo } = useTodos()
 
   return (
     <main className="container">
@@ -23,7 +23,7 @@ function App() {
             </Button>
           </div>
         </div>
-        <TodoList todos={todos} deleteTodo={deleteTodo} />
+        <TodoList todos={todos} deleteTodo={deleteTodo} updateTodo={updateTodo} />
       </section>
 
       <TodoForm show={showForm} handleClose={() => setShowForm(false)} addTodo={addTodo} />

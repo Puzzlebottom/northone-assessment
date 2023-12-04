@@ -5,13 +5,14 @@ import TodoItem from "./TodoItem";
 interface Props {
   todos: Todo[]
   deleteTodo: (todoId: string) => void
+  updateTodo: (todo: Todo) => void
 }
 
-function TodoList({ todos, deleteTodo }: Props): React.JSX.Element {
+function TodoList({ todos, deleteTodo, updateTodo }: Props): React.JSX.Element {
   return (
     <Accordion>
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} deleteTodo={deleteTodo} />
+        <TodoItem key={todo.id} todo={todo} deleteTodo={deleteTodo} updateTodo={updateTodo} />
       ))}
     </Accordion>
   )

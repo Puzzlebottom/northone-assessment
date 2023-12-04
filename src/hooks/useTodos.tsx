@@ -34,6 +34,24 @@ const reducer = (state: State, action: Action): State => {
         todos: state.todos.filter((todo) => todo.id !== action.todoId)
       }
 
+    case ACTIONS.UPDATE_TODO:
+      const index = state.todos.findIndex((todo) => todo.id === action.todo.id)
+
+      if (index >= 0) {
+        const updatedTodos = [...state.todos]
+        updatedTodos[index] = action.todo
+        return {
+          ...state,
+          todos: updatedTodos,
+        }
+      }
+      return { ...state }
+
+    case ACTIONS.SELECT_TODO:
+      return {
+        ...state,
+        selected: state.todos.find((todo) => todo.id === action.todoId) || null
+      }
     default:
       return state;
   }
@@ -43,7 +61,9 @@ function useTodos(): {
   todos: Todo[],
   selected: Todo | null,
   addTodo: (todo: Todo) => void
+  updateTodo: (todo: Todo) => void
   deleteTodo: (todoId: string) => void
+  selectTodo: (todoId: string) => void
 } {
   const initialState: State = {
     todos: dummyTodos,
@@ -56,11 +76,27 @@ function useTodos(): {
     dispatch({ type: 'ADD_TODO', todo })
   }
 
+  const updateTodo = (todo: Todo): void => {
+    dispatch({ type: 'UPDATE_TODO', todo })
+  }
+
   const deleteTodo = (todoId: string): void => {
     dispatch({ type: 'DELETE_TODO', todoId })
   }
 
-  return { todos: state.todos, selected: state.selected, addTodo, deleteTodo }
+  const selectTodo = (todoId: string): void => {
+    dispatch({ type: 'SELECT_TODO', todoId })
+  }
+
+
+  return {
+    todos: state.todos,
+    selected: state.selected,
+    addTodo,
+    updateTodo,
+    deleteTodo,
+    selectTodo
+  }
 }
 
 export default useTodos
