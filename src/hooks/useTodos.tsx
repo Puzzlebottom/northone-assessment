@@ -28,6 +28,12 @@ const reducer = (state: State, action: Action): State => {
         todos: [...state.todos, action.todo]
       }
 
+    case ACTIONS.DELETE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter((todo) => todo.id !== action.todoId)
+      }
+
     default:
       return state;
   }
@@ -37,6 +43,7 @@ function useTodos(): {
   todos: Todo[],
   selected: Todo | null,
   addTodo: (todo: Todo) => void
+  deleteTodo: (todoId: string) => void
 } {
   const initialState: State = {
     todos: dummyTodos,
@@ -45,11 +52,15 @@ function useTodos(): {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const addTodo = (todo: Todo) => {
+  const addTodo = (todo: Todo): void => {
     dispatch({ type: 'ADD_TODO', todo })
   }
 
-  return { todos: state.todos, selected: state.selected, addTodo }
+  const deleteTodo = (todoId: string): void => {
+    dispatch({ type: 'DELETE_TODO', todoId })
+  }
+
+  return { todos: state.todos, selected: state.selected, addTodo, deleteTodo }
 }
 
 export default useTodos

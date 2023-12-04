@@ -4,10 +4,16 @@ import { Todo } from "../interfaces/Todo"
 
 interface Props {
   todo: Todo;
+  deleteTodo: (todoId: string) => void
 }
 
-function TodoItem({ todo }: Props): React.JSX.Element {
+function TodoItem({ todo, deleteTodo }: Props): React.JSX.Element {
   const { id, name, description, status, dueDate } = todo
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation();
+    deleteTodo(id)
+  }
 
   return (
     <Accordion.Item eventKey={`${id}`}>
@@ -22,7 +28,7 @@ function TodoItem({ todo }: Props): React.JSX.Element {
             {status === "PENDING" && <FaRegSquare />}
             {status === "DONE" && <FaRegCheckSquare />}
           </Button>
-          <time className="mx-2">{dueDate.toISOString()}</time>
+          <time className="mx-2">{dueDate.toISOString().slice(0, 10)}</time>
         </span>
         <h3 className="m-0">{name}</h3>
         <span className="col d-flex justify-content-end">
@@ -34,7 +40,11 @@ function TodoItem({ todo }: Props): React.JSX.Element {
           >
             <FaPencilAlt />
           </Button>
-          <Button as="div" variant="danger" className="mx-2 pb-2" onClick={() => console.log('delete')}>
+          <Button
+            as="div"
+            variant="danger"
+            className="mx-2 pb-2"
+            onClick={handleDelete}>
             <FaTrashAlt />
           </Button>
         </span>
