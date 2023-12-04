@@ -1,8 +1,11 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
+import { useQuery } from '@tanstack/react-query'
+
 import { Todo } from "../interfaces/Todo";
-import dummyTodos from "../data/dummyTodos";
+import { getTodos } from "../api/todoRequests";
 
 const ACTIONS = {
+  SET_TODOS: 'SET_TODOS',
   ADD_TODO: 'ADD_TODO',
   UPDATE_TODO: 'UPDATE_TODO',
   DELETE_TODO: 'DELETE_TODO',
@@ -15,6 +18,7 @@ type State = {
 }
 
 type Action =
+  | { type: typeof ACTIONS.SET_TODOS; todos: Todo[] }
   | { type: typeof ACTIONS.ADD_TODO; todo: Todo }
   | { type: typeof ACTIONS.UPDATE_TODO; todo: Todo }
   | { type: typeof ACTIONS.DELETE_TODO; todoId: string }
@@ -22,6 +26,12 @@ type Action =
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
+    case ACTIONS.SET_TODOS:
+      return {
+        ...state,
+        todos: action.todos
+      }
+
     case ACTIONS.ADD_TODO:
       return {
         ...state,
@@ -70,11 +80,16 @@ function useTodos(): {
   selectTodo: (todoId: string | null) => void
 } {
   const initialState: State = {
-    todos: dummyTodos,
+    todos: [],
     selected: null
   }
 
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  const setTodos = (todos: Todo[]): void => {
+    dispatch({ type: 'SET_TODOS', todos })
+
+  }
 
   const addTodo = (todo: Todo): void => {
     dispatch({ type: 'ADD_TODO', todo })
@@ -91,6 +106,17 @@ function useTodos(): {
   const selectTodo = (todoId: string | null): void => {
     dispatch({ type: 'SELECT_TODO', todoId })
   }
+
+  const { data } = useQuery({
+    queryKey: ['todos'],
+    queryFn: () => getTodos(),
+  });
+
+  useEffect(() => {
+    if (data) {
+      setTodos(data)
+    }
+  }, [data])
 
   return {
     todos: state.todos,

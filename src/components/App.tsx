@@ -86,7 +86,6 @@ function App() {
           filterBy={searchValue}
         />
       </section>
-
       <TodoForm
         show={showForm}
         selected={selected}
