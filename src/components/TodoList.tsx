@@ -8,46 +8,51 @@ interface Props {
   updateTodo: (todo: Todo) => void
   editTodo: (todo: Todo) => void
   sortBy: string
+  filterBy: string
 }
 
-function TodoList({ todos, deleteTodo, updateTodo, editTodo, sortBy }: Props): React.JSX.Element {
+function TodoList({ todos, deleteTodo, updateTodo, editTodo, sortBy, filterBy }: Props): React.JSX.Element {
 
-  let sortedTodos: Todo[];
+  const filterFunction = (todo: Todo): boolean => {
+    const name = todo.name.toLowerCase()
+    const description = todo.description.toLowerCase()
+    const searchString = filterBy.toLowerCase()
+    return name.includes(searchString) || description.includes(searchString)
+  }
+
+  let sortFunction: (a: Todo, b: Todo) => number;
 
   switch (sortBy) {
     case 'name':
-      sortedTodos = todos.sort((a, b) => {
+      sortFunction = (a, b) => {
         const nameA = a.name.toLowerCase()
         const nameB = b.name.toLowerCase()
         if (nameA < nameB) return -1;
         if (nameA > nameB) return 1;
         return 0
-      })
+      }
       break
 
     case 'dueDate':
-      sortedTodos = todos.sort((a, b) => {
-        return new Date(a.dueDate).valueOf() - new Date(b.dueDate).valueOf()
-      })
+      sortFunction = (a, b) => {
+        return a.dueDate.valueOf() - b.dueDate.valueOf()
+      }
       break
 
     case 'status':
-      const statusMap = {
-        PENDING: 0,
-        DONE: 1,
-      }
-      sortedTodos = todos.sort((a, b) => {
+      sortFunction = (a, b) => {
+        const statusMap = { PENDING: 0, DONE: 1 }
         return statusMap[a.status] - statusMap[b.status]
-      })
+      }
       break
 
     default:
-      sortedTodos = todos;
+      sortFunction = () => 0
   }
 
   return (
     <Accordion>
-      {sortedTodos.map((todo) => (
+      {todos.filter(filterFunction).sort(sortFunction).map((todo) => (
         <TodoItem key={todo.id} todo={todo} deleteTodo={deleteTodo} updateTodo={updateTodo} editTodo={() => editTodo(todo)} />
       ))}
     </Accordion>

@@ -1,6 +1,6 @@
 import TodoList from "./TodoList"
-import { Button, Form } from "react-bootstrap"
-import { FaPlus } from "react-icons/fa"
+import { Button } from "react-bootstrap"
+import { FaPlus, FaSearch } from "react-icons/fa"
 import { useState } from "react"
 import TodoForm from "./TodoForm"
 import useTodos from "../hooks/useTodos"
@@ -10,6 +10,7 @@ function App() {
 
   const [showForm, setShowForm] = useState<boolean>(false)
   const [sortBy, setSortBy] = useState('dueDate')
+  const [searchValue, setSearchValue] = useState('')
   const { todos, selected, addTodo, updateTodo, deleteTodo, selectTodo } = useTodos()
 
   const handleAdd = () => {
@@ -24,6 +25,10 @@ function App() {
 
   const handleSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.currentTarget.value)
+  }
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.currentTarget.value)
   }
 
   return (
@@ -55,6 +60,22 @@ function App() {
               </select>
             </div>
           </div>
+          <div className="col-4">
+            <div className="input-group">
+              <input
+                name="search"
+                type="text"
+                placeholder="Search..."
+                autoComplete="off"
+                className="form-control"
+                aria-label="search by name"
+                value={searchValue}
+                onChange={handleSearch}
+              />
+              <span className="input-group-text"><FaSearch />
+              </span>
+            </div>
+          </div>
         </div>
         <TodoList
           todos={todos}
@@ -62,10 +83,16 @@ function App() {
           updateTodo={updateTodo}
           editTodo={handleEdit}
           sortBy={sortBy}
+          filterBy={searchValue}
         />
       </section>
 
-      <TodoForm show={showForm} selected={selected} handleClose={() => setShowForm(false)} addTodo={addTodo} updateTodo={updateTodo} />
+      <TodoForm
+        show={showForm}
+        selected={selected}
+        handleClose={() => setShowForm(false)}
+        addTodo={addTodo}
+        updateTodo={updateTodo} />
     </main>
   )
 }
