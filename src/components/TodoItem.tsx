@@ -6,9 +6,10 @@ interface Props {
   todo: Todo;
   deleteTodo: (todoId: string) => void
   updateTodo: (todo: Todo) => void
+  editTodo: () => void
 }
 
-function TodoItem({ todo, deleteTodo, updateTodo }: Props): React.JSX.Element {
+function TodoItem({ todo, deleteTodo, updateTodo, editTodo }: Props): React.JSX.Element {
   const { id, name, description, status, dueDate } = todo
 
   const toggleStatus = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -19,6 +20,11 @@ function TodoItem({ todo, deleteTodo, updateTodo }: Props): React.JSX.Element {
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
     deleteTodo(id)
+  }
+
+  const handleEdit = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.stopPropagation();
+    editTodo()
   }
 
   return (
@@ -34,7 +40,7 @@ function TodoItem({ todo, deleteTodo, updateTodo }: Props): React.JSX.Element {
             {status === "PENDING" && <FaRegSquare />}
             {status === "DONE" && <FaRegCheckSquare />}
           </Button>
-          <time className="mx-2">{dueDate.toISOString().slice(0, 10)}</time>
+          <time className="mx-2">{new Date(dueDate).toLocaleDateString()}</time>
         </span>
         <h3 className="m-0">{name}</h3>
         <span className="col d-flex justify-content-end">
@@ -42,7 +48,7 @@ function TodoItem({ todo, deleteTodo, updateTodo }: Props): React.JSX.Element {
             as="div"
             variant="primary"
             className="mx-2 pb-2"
-            onClick={() => console.log('edit')}
+            onClick={handleEdit}
           >
             <FaPencilAlt />
           </Button>

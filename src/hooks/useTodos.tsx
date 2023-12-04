@@ -18,7 +18,7 @@ type Action =
   | { type: typeof ACTIONS.ADD_TODO; todo: Todo }
   | { type: typeof ACTIONS.UPDATE_TODO; todo: Todo }
   | { type: typeof ACTIONS.DELETE_TODO; todoId: string }
-  | { type: typeof ACTIONS.SELECT_TODO; todoId: string }
+  | { type: typeof ACTIONS.SELECT_TODO; todoId: string | null }
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -48,12 +48,16 @@ const reducer = (state: State, action: Action): State => {
       return { ...state }
 
     case ACTIONS.SELECT_TODO:
+      if (!action.todoId) {
+        return {
+          ...state,
+          selected: null
+        }
+      }
       return {
         ...state,
         selected: state.todos.find((todo) => todo.id === action.todoId) || null
       }
-    default:
-      return state;
   }
 }
 
@@ -63,7 +67,7 @@ function useTodos(): {
   addTodo: (todo: Todo) => void
   updateTodo: (todo: Todo) => void
   deleteTodo: (todoId: string) => void
-  selectTodo: (todoId: string) => void
+  selectTodo: (todoId: string | null) => void
 } {
   const initialState: State = {
     todos: dummyTodos,
@@ -84,7 +88,7 @@ function useTodos(): {
     dispatch({ type: 'DELETE_TODO', todoId })
   }
 
-  const selectTodo = (todoId: string): void => {
+  const selectTodo = (todoId: string | null): void => {
     dispatch({ type: 'SELECT_TODO', todoId })
   }
 

@@ -3,15 +3,18 @@ import { v4 as uuid } from "uuid"
 import { Todo, TodoFormData, todoFormSchema } from "../interfaces/Todo";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 
 interface Props {
   show: boolean;
+  selected: Todo | null;
   handleClose: () => void;
   addTodo: (todo: Todo) => void;
+  updateTodo: (todo: Todo) => void;
 }
 
-function TodoForm({ show, handleClose, addTodo }: Props): React.JSX.Element {
-  const formatDate = (date: Date | number): Date => {
+function TodoForm({ show, selected, handleClose, addTodo, updateTodo }: Props): React.JSX.Element {
+  const formatDate = (date: Date): Date => {
     return new Date(date).toISOString().slice(0, 10) as unknown as Date
   }
 
@@ -22,14 +25,22 @@ function TodoForm({ show, handleClose, addTodo }: Props): React.JSX.Element {
     reset
   } = useForm<TodoFormData>({
     defaultValues: {
-      dueDate: formatDate(Date.now())
+      dueDate: formatDate(new Date())
     },
     resolver: zodResolver(todoFormSchema)
   })
 
   const submit = (data: FieldValues) => {
-    const todo = { ...data, id: uuid() } as Todo
-    addTodo(todo)
+    let todo = { ...data, dueDate: data.dueDate } as Todo;
+
+    if (selected) {
+      todo.id = selected.id
+      updateTodo(todo)
+    } else {
+      todo.id = uuid()
+      addTodo(todo)
+    }
+
     reset();
     handleClose();
   }
@@ -39,11 +50,25 @@ function TodoForm({ show, handleClose, addTodo }: Props): React.JSX.Element {
     handleClose();
   }
 
+  useEffect(() => {
+    if (selected) {
+      const { name, description, dueDate, status } = selected
+      reset({ name, description, dueDate: formatDate(dueDate), status });
+    } else {
+      reset({
+        name: '',
+        description: '',
+        dueDate: formatDate(new Date()),
+        status: 'PENDING'
+      })
+    }
+  }, [selected]);
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Form onSubmit={handleSubmit(submit)}>
         <Modal.Header className="justify-content-center">
-          <h5>Create Todo</h5>
+          <h5>{selected ? `Edit ${selected.name}` : 'Create Todo'}</h5>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="mb-3" controlId="name">
@@ -74,7 +99,7 @@ function TodoForm({ show, handleClose, addTodo }: Props): React.JSX.Element {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={cancel}>Cancel</Button>
-          <Button type="submit" disabled={isSubmitting}>Create</Button>
+          <Button type="submit" disabled={isSubmitting}>{selected ? 'Update' : 'Create'}</Button>
         </Modal.Footer>
       </Form>
     </Modal>
