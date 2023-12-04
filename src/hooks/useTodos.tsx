@@ -92,7 +92,6 @@ function useTodos(): {
     dispatch({ type: 'SELECT_TODO', todoId })
   }
 
-
   return {
     todos: state.todos,
     selected: state.selected,
