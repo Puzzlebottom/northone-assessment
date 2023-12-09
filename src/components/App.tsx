@@ -5,9 +5,11 @@ import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
 import useTodos from "../hooks/useTodos";
 import { Todo } from "../interfaces/Todo";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 function App() {
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState("dueDate");
   const [searchValue, setSearchValue] = useState("");
   const { todos, selected, addTodo, updateTodo, deleteTodo, selectTodo } =
@@ -93,6 +95,11 @@ function App() {
         handleClose={() => setShowForm(false)}
         addTodo={addTodo}
         updateTodo={updateTodo}
+      />
+      <ConfirmDeleteModal
+        show={showConfirm}
+        onHide={() => setShowConfirm(false)}
+        selected={selected}
       />
     </main>
   );
